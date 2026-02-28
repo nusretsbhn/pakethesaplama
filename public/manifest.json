@@ -1,0 +1,12 @@
+{
+  "name": "Tur Paket Hazırlama",
+  "short_name": "Tur Paket",
+  "theme_color": "#0f766e",
+  "background_color": "#f0fdfa",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/",
+  "icons": [
+    { "src": "/vite.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

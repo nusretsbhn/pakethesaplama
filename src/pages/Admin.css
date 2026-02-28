@@ -1,0 +1,291 @@
+.admin-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--primary);
+  color: white;
+  flex-shrink: 0;
+}
+
+.admin-header h1 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.admin-header .logout {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.admin-header .logout:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: #e2e8f0;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.admin-tabs a {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.admin-tabs a:hover {
+  background: #f1f5f9;
+  color: var(--primary);
+}
+
+.admin-tabs a.active {
+  background: var(--primary);
+  color: white;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--bg);
+}
+
+.admin-login h1 {
+  margin-bottom: 1.5rem;
+  color: var(--text);
+}
+
+.admin-login form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 280px;
+}
+
+.admin-login input {
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.admin-login button {
+  padding: 0.75rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.admin-login .hata {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.admin-login .demo {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.dynamic-list {
+  margin-top: 0.5rem;
+}
+
+.dynamic-list .row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+}
+
+.dynamic-list .row input,
+.dynamic-list .row select {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.dynamic-list .row button {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #fecaca;
+  color: #991b1b;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.dynamic-list .add-btn {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: #e0f2fe;
+  color: #0369a1;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th, td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #475569;
+}
+
+.btn-small {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  margin-right: 0.25rem;
+}
+
+.btn-edit {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.btn-delete {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle-wrap input[type="checkbox"] {
+  width: auto;
+}
+
+.indirim-dilimleri .dilim {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.indirim-dilimleri .dilim input {
+  width: 140px;
+  padding: 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.indirim-dilimleri .dilim input[type="number"] {
+  width: 80px;
+}
+
+.indirim-dilimleri .dilim button {
+  padding: 0.35rem 0.6rem;
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logo-upload {
+  margin-top: 0.5rem;
+}
+
+.logo-upload img {
+  max-width: 120px;
+  max-height: 60px;
+  display: block;
+  margin-top: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}

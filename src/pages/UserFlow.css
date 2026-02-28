@@ -1,0 +1,188 @@
+.user-flow {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.user-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--primary);
+  color: white;
+}
+
+.user-header h1 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.user-header a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.user-steps {
+  flex: 1;
+  padding: 1rem;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.step-indicator {
+  font-size: 0.9rem;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.step-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 1rem;
+}
+
+.step-card h2 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.step-card .meta,
+.step-card .info {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0.5rem 0 0;
+}
+
+.step-card .form-group {
+  margin-bottom: 1rem;
+}
+
+.step-card .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.counter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.counter button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--primary);
+}
+
+.counter button:hover {
+  background: #f0fdfa;
+}
+
+.counter span {
+  min-width: 2rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+
+.checkbox-item input {
+  width: auto;
+}
+
+.muted {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.btn-large {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.sonuc-ozet {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f0fdfa;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.sonuc-ozet p {
+  margin: 0.25rem 0;
+}
+
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.step-nav button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid var(--primary);
+  background: white;
+  color: var(--primary);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.step-nav button:not(:disabled):hover {
+  background: var(--primary);
+  color: white;
+}
+
+.step-nav button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gorsel-ekrani {
+  flex: 1;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.gorsel-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
