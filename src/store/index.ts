@@ -38,7 +38,9 @@ export async function loadFromApi(): Promise<void> {
   cache.otelFiyatlari = Array.isArray(otelFiyatlari) ? otelFiyatlari : []
   cache.aktiviteFiyatlari = Array.isArray(aktiviteFiyatlari) ? aktiviteFiyatlari : []
   cache.yanHizmetler = Array.isArray(yanHizmetler) ? yanHizmetler : []
-  cache.ayarlar = ayarlar || { webAdresi: '', telefonNo: '' }
+  cache.ayarlar = (ayarlar && typeof ayarlar === 'object' && 'webAdresi' in ayarlar
+    ? ayarlar
+    : { webAdresi: '', telefonNo: '' }) as Ayarlar
   cache.loaded = true
 }
 
@@ -169,7 +171,7 @@ export const store = {
       return cache.ayarlar
     },
     async set(a: Ayarlar): Promise<void> {
-      await api.ayarlar.set(a)
+      await api.ayarlar.set(a as unknown as Record<string, unknown>)
       cache.ayarlar = a
     },
   },
