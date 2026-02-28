@@ -39,6 +39,10 @@ npm run build
 
 Çıktı: `dist/`. Önizleme: `npm run preview`.
 
+## Easypanel / VPS deploy
+
+Canlıya almak için **adım adım rehber:** [EASYPANEL.md](./EASYPANEL.md)
+
 ## PWA
 
 `public/manifest.json` ile ana ekrana eklenebilir.

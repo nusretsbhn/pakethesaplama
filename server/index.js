@@ -1,5 +1,7 @@
 const express = require('express')
 const cors = require('cors')
+const path = require('path')
+const fs = require('fs')
 const db = require('./db')
 
 const app = express()
@@ -7,6 +9,7 @@ app.use(cors())
 app.use(express.json({ limit: '10mb' }))
 
 const PORT = process.env.PORT || 3001
+const isProduction = process.env.NODE_ENV === 'production'
 
 // --- Oteller ---
 app.get('/api/oteller', (req, res) => {
@@ -226,6 +229,15 @@ app.put('/api/ayarlar', (req, res) => {
   res.json({ firmaLogosu: r.firmaLogosu || undefined, tursabLogosu: r.tursabLogosu || undefined, webAdresi: r.webAdresi || '', telefonNo: r.telefonNo || '' })
 })
 
+// Production: frontend (Vite build) aynı sunucudan servis edilir
+if (isProduction) {
+  const distPath = path.join(__dirname, '..', 'dist')
+  if (fs.existsSync(distPath)) {
+    app.use(express.static(distPath))
+    app.get('*', (req, res) => res.sendFile(path.join(distPath, 'index.html')))
+  }
+}
+
 app.listen(PORT, () => {
-  console.log(`API sunucusu http://localhost:${PORT} adresinde çalışıyor. Veritabanı: data/paket.db`)
+  console.log(`Sunucu http://localhost:${PORT} | Veritabanı: data/paket.db`)
 })
