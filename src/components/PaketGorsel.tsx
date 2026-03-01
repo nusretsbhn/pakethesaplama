@@ -109,9 +109,9 @@ export default function PaketGorsel({
       context.fillText(`${geceSayisi} GECE ${geceSayisi + 1} GÜN`, W / 2, midY)
       context.fillText(konaklamaTipi.toUpperCase(), W / 2, midY + lineHeight)
 
-      // 6) Turuncu çerçeveli kutu — içinde sadece aktiviteler (aynı stil) + altında yan hizmetler, taşma yok
+      // 6) Turuncu çerçeveli kutu — içinde aktiviteler + yan hizmetler; yükseklik yeterli olsun (yan haklar kesilmesin)
       const boxTop = H * 0.72
-      const boxH = H * 0.16
+      const boxH = H * 0.178
       const boxPad = W * 0.035
       const boxX = W * 0.06
       const boxW = W * 0.88
@@ -132,8 +132,8 @@ export default function PaketGorsel({
       const clipY = boxTop + boxPad
       const clipW = boxW - boxPad * 2
       const clipH = boxH - boxPad * 2
-      const insetTop = 22
-      const insetBottom = 22
+      const insetTop = 20
+      const insetBottom = 28
       const contentClipY = clipY + insetTop
       const contentClipH = clipH - insetTop - insetBottom
       roundRect(context, clipX, contentClipY, clipW, contentClipH, Math.max(0, boxR - boxPad - 2))
