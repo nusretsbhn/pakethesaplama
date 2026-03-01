@@ -126,18 +126,22 @@ export default function PaketGorsel({
       context.fill()
       context.stroke()
 
-      // Kutu içine clip — taşma olmasın
+      // Kutu içine clip — taşma olmasın; üst/alt iç boşluk ile yazılar yarım kesilmesin
       context.save()
       const clipX = boxX + boxPad
       const clipY = boxTop + boxPad
       const clipW = boxW - boxPad * 2
       const clipH = boxH - boxPad * 2
-      roundRect(context, clipX, clipY, clipW, clipH, Math.max(0, boxR - boxPad))
+      const insetTop = 22
+      const insetBottom = 22
+      const contentClipY = clipY + insetTop
+      const contentClipH = clipH - insetTop - insetBottom
+      roundRect(context, clipX, contentClipY, clipW, contentClipH, Math.max(0, boxR - boxPad - 2))
       context.clip()
 
-      // İlk satır için üstten yeterli boşluk — aktivite yazısı 45px üste alındı
+      // İlk satır clip içinde tam görünsün (üst/alt kesilme yok)
       const activityFontSize = Math.round(W * 0.032)
-      let boxY = boxTop + boxPad + boxLineH * 1.2 - 45
+      let boxY = contentClipY + activityFontSize / 2 + 4 - boxLineH / 2
       // 6a) Kutu içi: Sadece aktivite adları (kalın, büyük harf, ortalı)
       context.fillStyle = '#1e293b'
       context.font = `bold ${activityFontSize}px sans-serif`
