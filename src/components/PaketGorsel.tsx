@@ -251,31 +251,6 @@ function roundRect(
   ctx.closePath()
 }
 
-function wrapText(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  maxWidth: number,
-  lineHeight: number
-) {
-  const words = text.split(/\s+/)
-  let line = ''
-  let currentY = y
-  for (const word of words) {
-    const test = line + (line ? ' ' : '') + word
-    const m = ctx.measureText(test)
-    if (m.width > maxWidth && line) {
-      ctx.fillText(line, x, currentY)
-      currentY += lineHeight
-      line = word
-    } else {
-      line = test
-    }
-  }
-  if (line) ctx.fillText(line, x, currentY)
-}
-
 /** Satırları sarıp her satırı centerX'e göre ortalar */
 function wrapTextCenter(
   ctx: CanvasRenderingContext2D,
