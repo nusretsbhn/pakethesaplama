@@ -274,38 +274,7 @@ function roundRect(
   ctx.closePath()
 }
 
-/** Satırları sarıp her satırı centerX'e göre ortalar */
-function wrapTextCenter(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  centerX: number,
-  startY: number,
-  maxWidth: number,
-  lineHeight: number
-) {
-  const words = text.split(/\s+/)
-  const lines: string[] = []
-  let line = ''
-  for (const word of words) {
-    const test = line + (line ? ' ' : '') + word
-    const m = ctx.measureText(test)
-    if (m.width > maxWidth && line) {
-      lines.push(line)
-      line = word
-    } else {
-      line = test
-    }
-  }
-  if (line) lines.push(line)
-  ctx.textAlign = 'center'
-  let currentY = startY
-  for (const ln of lines) {
-    ctx.fillText(ln, centerX, currentY)
-    currentY += lineHeight
-  }
-}
-
-/** wrapTextCenter ile aynı ama en fazla maxLines satır çizer; taşma olmaz */
+/** Satırları sarıp ortalar, en fazla maxLines satır çizer (taşma olmaz) */
 function wrapTextCenterMaxLines(
   ctx: CanvasRenderingContext2D,
   text: string,
