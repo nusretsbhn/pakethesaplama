@@ -73,11 +73,11 @@ export default function PaketGorsel({
         }
       }
 
-      // 3) Fiyat balonu — teal konuşma balonu, sağ üst-orta
-      const bubbleX = W * 0.52
+      // 3) Fiyat balonu — teal, %30 küçültülmüş
+      const bubbleX = W * 0.54
       const bubbleY = H * 0.28
-      const bubbleW = W * 0.42
-      const bubbleH = H * 0.16
+      const bubbleW = W * 0.42 * 0.7
+      const bubbleH = H * 0.16 * 0.7
       const r = Math.min(bubbleW, bubbleH) * 0.15
       context.fillStyle = '#0d9488'
       context.strokeStyle = '#ffffff'
@@ -99,23 +99,19 @@ export default function PaketGorsel({
 
       // 4) Otel ismi görselde asla yazılmaz (müşteriye verilmez).
 
-      // 5) "X GECE Y GÜN" ve "KONAKLAMA TİPİ" — kalın koyu, büyük harf
-      const mainY = H * 0.48
       const lineHeight = H * 0.038
-      context.fillStyle = '#1e293b'
-      context.font = `bold ${Math.round(W * 0.048)}px sans-serif`
-      context.fillText(`${geceSayisi} GECE ${geceSayisi + 1} GÜN`, W / 2, mainY)
-      context.fillText(konaklamaTipi.toUpperCase(), W / 2, mainY + lineHeight)
 
-      // 6) Aktiviteler — her biri ayrı satır, büyük harf
-      let actY = mainY + lineHeight * 2.2
+      // 5) Aktiviteler — kum alanında, büyük harf
+      let actY = H * 0.46
+      context.fillStyle = '#1e293b'
       context.font = `bold ${Math.round(W * 0.038)}px sans-serif`
+      context.textAlign = 'center'
       for (const ad of aktiviteAdlari) {
         context.fillText(ad.toUpperCase(), W / 2, actY)
         actY += lineHeight * 1.1
       }
 
-      // 7) Yan hizmetler / dahil bilgiler — turuncu çerçeveli kutu
+      // 6) Beyaz kutu — içinde "X GECE Y GÜN", "KONAKLAMA TİPİ" ve yan hizmetler
       const boxTop = H * 0.72
       const boxH = H * 0.14
       const boxPad = W * 0.04
@@ -129,13 +125,21 @@ export default function PaketGorsel({
       context.fill()
       context.stroke()
 
+      // 6a) Kutu içi: "3 GECE 4 GÜN" ve "YARIM PANSİYON" (beyaz alana taşındı)
+      const boxContentY = boxTop + boxPad + lineHeight * 0.6
+      context.fillStyle = '#1e293b'
+      context.font = `bold ${Math.round(W * 0.048)}px sans-serif`
+      context.textAlign = 'center'
+      context.fillText(`${geceSayisi} GECE ${geceSayisi + 1} GÜN`, W / 2, boxContentY)
+      context.fillText(konaklamaTipi.toUpperCase(), W / 2, boxContentY + lineHeight)
+
+      // 6b) Yan hizmetler — font biraz büyük, ortalanmış
       const inclusionLines = yanHizmetAdlari.length
         ? yanHizmetAdlari.join(' - ')
         : 'Açık Büfe Kahvaltı & Konaklama - Transferler'
       context.fillStyle = '#334155'
-      context.font = `${Math.round(W * 0.022)}px sans-serif`
-      context.textAlign = 'left'
-      wrapText(context, inclusionLines, boxX + boxPad, boxTop + boxPad, boxW - boxPad * 2, lineHeight * 1.2)
+      context.font = `${Math.round(W * 0.026)}px sans-serif`
+      wrapTextCenter(context, inclusionLines, W / 2, boxContentY + lineHeight * 2.2, boxW - boxPad * 2, lineHeight * 1.3)
 
       // 8) Alt iletişim çubuğu — telefon sol, web sağ, turuncu
       const barY = H * 0.90
@@ -270,4 +274,35 @@ function wrapText(
     }
   }
   if (line) ctx.fillText(line, x, currentY)
+}
+
+/** Satırları sarıp her satırı centerX'e göre ortalar */
+function wrapTextCenter(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  centerX: number,
+  startY: number,
+  maxWidth: number,
+  lineHeight: number
+) {
+  const words = text.split(/\s+/)
+  const lines: string[] = []
+  let line = ''
+  for (const word of words) {
+    const test = line + (line ? ' ' : '') + word
+    const m = ctx.measureText(test)
+    if (m.width > maxWidth && line) {
+      lines.push(line)
+      line = word
+    } else {
+      line = test
+    }
+  }
+  if (line) lines.push(line)
+  ctx.textAlign = 'center'
+  let currentY = startY
+  for (const ln of lines) {
+    ctx.fillText(ln, centerX, currentY)
+    currentY += lineHeight
+  }
 }
