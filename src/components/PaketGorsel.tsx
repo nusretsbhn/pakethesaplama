@@ -101,8 +101,8 @@ export default function PaketGorsel({
 
       const lineHeight = H * 0.038
 
-      // 5) Orta alan (kum): Sadece "3 GECE 4 GÜN" ve "YARIM PANSİYON" (biraz aşağıda)
-      const midY = H * 0.52
+      // 5) Orta alan (kum): Sadece "3 GECE 4 GÜN" ve "YARIM PANSİYON" (+180px aşağı)
+      const midY = H * 0.52 + 180
       context.fillStyle = '#1e293b'
       context.font = `bold ${Math.round(W * 0.048)}px sans-serif`
       context.textAlign = 'center'
@@ -135,9 +135,9 @@ export default function PaketGorsel({
       roundRect(context, clipX, clipY, clipW, clipH, Math.max(0, boxR - boxPad))
       context.clip()
 
-      // İlk satır için üstten yeterli boşluk — üst kısım silik kesilmesin (baseline + ascender alanı)
+      // İlk satır için üstten yeterli boşluk — aktivite yazısı 45px üste alındı
       const activityFontSize = Math.round(W * 0.032)
-      let boxY = boxTop + boxPad + boxLineH * 1.2
+      let boxY = boxTop + boxPad + boxLineH * 1.2 - 45
       // 6a) Kutu içi: Sadece aktivite adları (kalın, büyük harf, ortalı)
       context.fillStyle = '#1e293b'
       context.font = `bold ${activityFontSize}px sans-serif`
@@ -148,8 +148,8 @@ export default function PaketGorsel({
         boxY += boxLineH
       }
       context.textBaseline = 'alphabetic'
-      boxY += boxLineH * 0.4
-      // 6b) Hemen altına: Yan hizmetler, font biraz büyük ama kutuda kalsın
+      boxY += boxLineH * 0.4 + 55
+      // 6b) Hemen altına: Yan hizmetler (+55px aşağı), font biraz büyük ama kutuda kalsın
       const inclusionLines = yanHizmetAdlari.length
         ? yanHizmetAdlari.join(' - ')
         : 'Açık Büfe Kahvaltı & Konaklama - Transferler'
