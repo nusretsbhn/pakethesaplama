@@ -93,7 +93,7 @@ export default function AktiviteFiyatGiris() {
         </div>
         <div className="form-group">
           <label>Kişi Başı Fiyat (TL) *</label>
-          <input type="number" min={0} step={50} value={fiyat || ''} onChange={(e) => setFiyat(Number(e.target.value))} required />
+          <input type="number" min={0} step={1} value={fiyat || ''} onChange={(e) => setFiyat(Number(e.target.value))} required />
         </div>
         <button type="submit" className="btn-primary">{editId ? 'Güncelle' : 'Ekle'}</button>
         {editId && <button type="button" className="btn-small" onClick={resetForm} style={{ marginLeft: '0.5rem' }}>İptal</button>}

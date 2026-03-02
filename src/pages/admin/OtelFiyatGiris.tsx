@@ -138,18 +138,24 @@ export default function OtelFiyatGiris() {
         </div>
         <div className="form-group">
           <label>Liste Fiyatı (TL, kişi başı/gece) *</label>
-          <input type="number" min={0} step={100} value={listeFiyati || ''} onChange={(e) => setListeFiyati(Number(e.target.value))} required />
+          <input type="number" min={0} step={1} value={listeFiyati || ''} onChange={(e) => setListeFiyati(Number(e.target.value))} required />
         </div>
         <div className="form-group">
-          <label>İndirim Dilimleri (bitiş tarihi + indirim %)</label>
+          <label>İndirim Dilimleri (bitiş tarihi – yüzde – indirimli fiyat otomatik)</label>
           <div className="indirim-dilimleri">
-            {indirimDilimleri.map((d, i) => (
-              <div key={i} className="dilim">
-                <input type="date" value={d.bitisTarihi} onChange={(e) => setDilim(i, 'bitisTarihi', e.target.value)} />
-                <input type="number" min={0} max={100} placeholder="%" value={d.indirimOrani || ''} onChange={(e) => setDilim(i, 'indirimOrani', Number(e.target.value))} />
-                <button type="button" onClick={() => removeDilim(i)}>Sil</button>
-              </div>
-            ))}
+            {indirimDilimleri.map((d, i) => {
+              const indirimliFiyat = listeFiyati > 0 && d.indirimOrani >= 0
+                ? Math.round(listeFiyati * (1 - d.indirimOrani / 100))
+                : '—'
+              return (
+                <div key={i} className="dilim">
+                  <input type="date" value={d.bitisTarihi} onChange={(e) => setDilim(i, 'bitisTarihi', e.target.value)} />
+                  <input type="number" min={0} max={100} placeholder="%" value={d.indirimOrani || ''} onChange={(e) => setDilim(i, 'indirimOrani', Number(e.target.value))} />
+                  <input type="text" readOnly value={typeof indirimliFiyat === 'number' ? `${indirimliFiyat} ₺` : indirimliFiyat} className="readonly" title="Oda fiyatından otomatik hesaplanır" />
+                  <button type="button" onClick={() => removeDilim(i)}>Sil</button>
+                </div>
+              )
+            })}
             <button type="button" className="add-btn" onClick={addDilim}>Dilim Ekle</button>
           </div>
         </div>

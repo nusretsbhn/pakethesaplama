@@ -269,7 +269,28 @@ export default function UserFlow() {
             />
           )}
           <div className="gorsel-actions">
-            <button type="button" className="btn-primary" onClick={() => setGorselGoster(false)}>Yeni Hesaplama</button>
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => {
+                setStep(1)
+                setOtelId('')
+                setGirisTarihi('')
+                setCikisTarihi('')
+                setYetiskin(2)
+                setCocuk(0)
+                setBebek(0)
+                setKonaklamaTipi('')
+                setOdaTipi('')
+                setAktiviteIds([])
+                setYanHizmetIds([])
+                setKarMarji(0)
+                setSonuc(null)
+                setGorselGoster(false)
+              }}
+            >
+              Yeni Hesaplama Yap
+            </button>
           </div>
         </div>
       )}

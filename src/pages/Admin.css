@@ -268,6 +268,13 @@ th {
   width: 80px;
 }
 
+.indirim-dilimleri .dilim input.readonly {
+  width: 100px;
+  background: #f1f5f9;
+  color: #475569;
+  cursor: not-allowed;
+}
+
 .indirim-dilimleri .dilim button {
   padding: 0.35rem 0.6rem;
   background: #fee2e2;
