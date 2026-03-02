@@ -44,27 +44,22 @@ function yuvarla500lu(tutar: number): number {
   return alt500 + 500
 }
 
-/** Giriş tarihine göre otel gece fiyatını (indirim dilimi uygulanmış) bulur.
- * "31 Mart'a kadar %20" = giriş 31 Mart ve öncesiyse %20. Doğru dilimi bulmak için
- * dilimler bitiş tarihine göre KÜÇÜKTEN BÜYÜĞE sıralanır; giriş tarihi hangi dilimin
- * bitişine denk geliyorsa (veya ondan önceyse) o dilim uygulanır. */
-function otelGecelikFiyat(
-  fiyatKaydi: OtelFiyat,
-  girisTarihi: string
-): number {
-  const gir = parseDate(girisTarihi).getTime()
-  let oran = 1
-  const dilimler = [...(fiyatKaydi.indirimDilimleri ?? [])].sort(
-    (a, b) => parseDate(a.bitisTarihi).getTime() - parseDate(b.bitisTarihi).getTime()
-  )
-  for (const dilim of dilimler) {
+/** Hesaplama yapıldığı tarihe (bugün) göre otel gece fiyatını (indirim dilimi uygulanmış) bulur.
+ * "31 Mart'a kadar %20" = hesaplama bugün 31 Mart ve öncesiyse %20 indirim.
+ * Giriş tarihi değil, hesaplama anındaki tarih (DateTime.Now) baz alınır. */
+function otelGecelikFiyat(fiyatKaydi: OtelFiyat): number {
+  const bugun = new Date()
+  const bugunStr = `${bugun.getFullYear()}-${String(bugun.getMonth() + 1).padStart(2, '0')}-${String(bugun.getDate()).padStart(2, '0')}`
+  const bugunMs = parseDate(bugunStr).getTime()
+  let enIyiOran = 1
+  for (const dilim of fiyatKaydi.indirimDilimleri ?? []) {
     const bit = parseDate(dilim.bitisTarihi).getTime()
-    if (gir <= bit) {
-      oran = 1 - dilim.indirimOrani / 100
-      break
+    if (bugunMs <= bit) {
+      const oran = 1 - dilim.indirimOrani / 100
+      if (oran < enIyiOran) enIyiOran = oran
     }
   }
-  return fiyatKaydi.listeFiyati * oran
+  return fiyatKaydi.listeFiyati * enIyiOran
 }
 
 /** Tek kişi: 1.7, 2+ yetişkin: 2 (veya oda sayısına göre) */
@@ -123,7 +118,7 @@ export function hesapla(girdi: HesaplamaGirdisi): HesaplamaSonucu | null {
   if (fiyatlar.length === 0) return null
 
   const fiyatKaydi = fiyatlar[0]
-  const gecelikFiyat = otelGecelikFiyat(fiyatKaydi, girisTarihi)
+  const gecelikFiyat = otelGecelikFiyat(fiyatKaydi)
   const carpan = odaCarpani(yetiskin)
   const odaSay = odaSayisi(yetiskin, cocuk, bebek)
   const odaFiyatiToplam =
