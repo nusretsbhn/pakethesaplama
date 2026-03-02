@@ -22,6 +22,8 @@ export interface HesaplamaSonucu {
   odaFiyatiToplam: number
   aktiviteToplam: number
   karMarji: number
+  /** Geçici debug: Hangi indirim dilimi uygulandı */
+  uygulananIndirimDilimi?: { bitisTarihi: string; indirimOrani: number } | null
 }
 
 function parseDate(s: string): Date {
@@ -47,19 +49,23 @@ function yuvarla500lu(tutar: number): number {
 /** Hesaplama yapıldığı tarihe (bugün) göre otel gece fiyatını (indirim dilimi uygulanmış) bulur.
  * "31 Mart'a kadar %20" = hesaplama bugün 31 Mart ve öncesiyse %20 indirim.
  * Giriş tarihi değil, hesaplama anındaki tarih (DateTime.Now) baz alınır. */
-function otelGecelikFiyat(fiyatKaydi: OtelFiyat): number {
+function otelGecelikFiyat(fiyatKaydi: OtelFiyat): { fiyat: number; uygulananDilim: { bitisTarihi: string; indirimOrani: number } | null } {
   const bugun = new Date()
   const bugunStr = `${bugun.getFullYear()}-${String(bugun.getMonth() + 1).padStart(2, '0')}-${String(bugun.getDate()).padStart(2, '0')}`
   const bugunMs = parseDate(bugunStr).getTime()
   let enIyiOran = 1
+  let uygulananDilim: { bitisTarihi: string; indirimOrani: number } | null = null
   for (const dilim of fiyatKaydi.indirimDilimleri ?? []) {
     const bit = parseDate(dilim.bitisTarihi).getTime()
     if (bugunMs <= bit) {
       const oran = 1 - dilim.indirimOrani / 100
-      if (oran < enIyiOran) enIyiOran = oran
+      if (oran < enIyiOran) {
+        enIyiOran = oran
+        uygulananDilim = { bitisTarihi: dilim.bitisTarihi, indirimOrani: dilim.indirimOrani }
+      }
     }
   }
-  return fiyatKaydi.listeFiyati * enIyiOran
+  return { fiyat: fiyatKaydi.listeFiyati * enIyiOran, uygulananDilim }
 }
 
 /** Tek kişi: 1.7, 2+ yetişkin: 2 (veya oda sayısına göre) */
@@ -118,7 +124,7 @@ export function hesapla(girdi: HesaplamaGirdisi): HesaplamaSonucu | null {
   if (fiyatlar.length === 0) return null
 
   const fiyatKaydi = fiyatlar[0]
-  const gecelikFiyat = otelGecelikFiyat(fiyatKaydi)
+  const { fiyat: gecelikFiyat, uygulananDilim } = otelGecelikFiyat(fiyatKaydi)
   const carpan = odaCarpani(yetiskin)
   const odaSay = odaSayisi(yetiskin, cocuk, bebek)
   const odaFiyatiToplam =
@@ -154,5 +160,6 @@ export function hesapla(girdi: HesaplamaGirdisi): HesaplamaSonucu | null {
     odaFiyatiToplam,
     aktiviteToplam,
     karMarji,
+    uygulananIndirimDilimi: uygulananDilim,
   }
 }

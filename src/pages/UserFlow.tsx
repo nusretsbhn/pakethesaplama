@@ -72,6 +72,12 @@ export default function UserFlow() {
     const r = hesapla(girdi)
     setSonuc(r ?? null)
     setGorselGoster(!!r)
+    // Geçici debug: Hangi indirim dilimi uygulandı
+    if (r?.uygulananIndirimDilimi) {
+      alert(`Uygulanan indirim dilimi: ${r.uygulananIndirimDilimi.bitisTarihi} tarihine kadar %${r.uygulananIndirimDilimi.indirimOrani} indirim`)
+    } else if (r) {
+      alert('Uygulanan indirim dilimi: Yok (liste fiyatı uygulandı)')
+    }
   }
 
   const ileri = () => setStep((s) => Math.min(s + 1, 9))
