@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import './Admin.css'
 
 const adminTabs = [
+  { to: '/', label: 'Paket Oluştur' },
   { to: '/admin', end: true, label: 'Otel Girişi' },
   { to: '/admin/aktivite', label: 'Aktivite Girişi' },
   { to: '/admin/otel-fiyat', label: 'Otel Fiyat Girişi' },
