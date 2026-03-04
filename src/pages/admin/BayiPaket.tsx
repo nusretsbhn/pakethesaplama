@@ -237,7 +237,12 @@ export default function BayiPaket() {
         {step === 8 && (
           <section className="step-card">
             <h2>8. Hesapla</h2>
-            <button type="button" className="btn-primary btn-large" onClick={handleHesapla}>
+            <button
+              type="button"
+              className="btn-primary btn-large"
+              onClick={handleHesapla}
+              disabled={!!sonuc}
+            >
               Hesapla
             </button>
             {sonuc && (
@@ -265,6 +270,27 @@ export default function BayiPaket() {
                 <p style={{ marginTop: '1rem', fontSize: '1.1rem' }}>
                   <strong>Kişi Başı:</strong> {sonuc.kisiBasiUcret.toLocaleString('tr-TR')} TL
                 </p>
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  style={{ marginTop: '0.75rem' }}
+                  onClick={() => {
+                    setStep(1)
+                    setOtelId('')
+                    setGirisTarihi('')
+                    setCikisTarihi('')
+                    setYetiskin(2)
+                    setCocuk(0)
+                    setBebek(0)
+                    setKonaklamaTipi('')
+                    setOdaTipi('')
+                    setAktiviteIds([])
+                    setYanHizmetIds([])
+                    setSonuc(null)
+                  }}
+                >
+                  Yeni Hesaplama
+                </button>
               </div>
             )}
           </section>
