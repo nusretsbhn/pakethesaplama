@@ -14,6 +14,7 @@ type AuthUser = {
   id: string
   username: string
   role: UserRole
+  expiresAt: number
 }
 
 type AuthContextType = {
@@ -33,7 +34,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (raw) {
       try {
         const parsed = JSON.parse(raw) as AuthUser
-        setUser(parsed)
+        if (parsed.expiresAt && parsed.expiresAt > Date.now()) {
+          setUser(parsed)
+        } else {
+          localStorage.removeItem(AUTH_KEY)
+        }
       } catch {
         localStorage.removeItem(AUTH_KEY)
       }
@@ -48,7 +53,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({ username, password }),
       })
       if (!res.ok) return null
-      const data = (await res.json()) as AuthUser
+      const base = (await res.json()) as Omit<AuthUser, 'expiresAt'>
+      const data: AuthUser = {
+        ...base,
+        expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 gün
+      }
       localStorage.setItem(AUTH_KEY, JSON.stringify(data))
       setUser(data)
       return data

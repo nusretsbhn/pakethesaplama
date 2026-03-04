@@ -54,10 +54,19 @@ function AdminGate() {
   )
 }
 
+function AdminOnlyUserFlow() {
+  const { isAuthenticated, user } = useAuth()
+  if (!isAuthenticated) return <AdminLogin />
+  if (user?.role !== 'admin') {
+    return <Navigate to="/admin/bayi-paket" replace />
+  }
+  return <UserFlow />
+}
+
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<UserFlow />} />
+      <Route path="/" element={<AdminOnlyUserFlow />} />
       <Route path="/admin/*" element={<AdminGate />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
