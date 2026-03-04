@@ -69,14 +69,26 @@ export default function UserFlow() {
       yanHizmetIds,
       karMarji,
     }
-    const r = hesapla(girdi)
-    setSonuc(r ?? null)
-    setGorselGoster(!!r)
-    // Geçici debug: Hangi indirim dilimi uygulandı
-    if (r?.uygulananIndirimDilimi) {
-      alert(`Uygulanan indirim dilimi: ${r.uygulananIndirimDilimi.bitisTarihi} tarihine kadar %${r.uygulananIndirimDilimi.indirimOrani} indirim`)
-    } else if (r) {
-      alert('Uygulanan indirim dilimi: Yok (liste fiyatı uygulandı)')
+    try {
+      const r = hesapla(girdi)
+      if (!r) {
+        alert('Hesaplama yapılamadı. Lütfen tarih ve seçimleri kontrol edin.')
+        setSonuc(null)
+        setGorselGoster(false)
+        return
+      }
+      setSonuc(r)
+      setGorselGoster(true)
+    } catch (e) {
+      const msg =
+        e instanceof Error
+          ? e.message
+          : typeof e === 'string'
+          ? e
+          : 'Hesaplama sırasında bir hata oluştu.'
+      alert(msg)
+      setSonuc(null)
+      setGorselGoster(false)
     }
   }
 

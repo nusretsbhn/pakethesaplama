@@ -112,23 +112,41 @@ export function hesapla(girdi: HesaplamaGirdisi): HesaplamaSonucu | null {
   const geceSayisi = gunFarki(girisTarihi, cikisTarihi)
   if (geceSayisi <= 0) return null
 
+  // İlgili otel için, konaklama/oda tipine göre TÜM fiyat kayıtlarını al
   const fiyatlar = store.otelFiyatlari
     .getByOtelId(otelId)
-    .filter(
-      (f) =>
-        f.konaklamaTipi === konaklamaTipi &&
-        f.odaTipi === odaTipi &&
-        girisTarihi >= f.baslangicTarihi &&
-        cikisTarihi <= f.bitisTarihi
-    )
+    .filter((f) => f.konaklamaTipi === konaklamaTipi && f.odaTipi === odaTipi)
   if (fiyatlar.length === 0) return null
 
-  const fiyatKaydi = fiyatlar[0]
-  const { fiyat: gecelikFiyat, uygulananDilim } = otelGecelikFiyat(fiyatKaydi)
   const carpan = odaCarpani(yetiskin)
   const odaSay = odaSayisi(yetiskin, cocuk, bebek)
-  const odaFiyatiToplam =
-    gecelikFiyat * carpan * geceSayisi * odaSay
+  const DAY_MS = 24 * 60 * 60 * 1000
+
+  // Gecelik oda fiyatını, her gece için ayrı ayrı hesapla:
+  // Örn: 3 gece, ilk gece alt sezon, sonraki 2 gece üst sezon gibi.
+  let odaFiyatiToplam = 0
+  let uygulananDilim: { bitisTarihi: string; indirimOrani: number } | null = null
+
+  const girDate = parseDate(girisTarihi)
+  for (let i = 0; i < geceSayisi; i++) {
+    const geceDate = new Date(girDate.getTime() + i * DAY_MS)
+    const y = geceDate.getFullYear()
+    const m = String(geceDate.getMonth() + 1).padStart(2, '0')
+    const d = String(geceDate.getDate()).padStart(2, '0')
+    const geceStr = `${y}-${m}-${d}`
+
+    const fiyatKaydi = fiyatlar.find(
+      (f) => geceStr >= f.baslangicTarihi && geceStr <= f.bitisTarihi
+    )
+    if (!fiyatKaydi) {
+      // Bu gece için fiyat tanımı yoksa, hata fırlat (UI'da gösterilecek)
+      throw new Error(`Bu tarih için otel fiyat kaydı yok: ${geceStr}`)
+    }
+    const { fiyat: gecelikFiyat, uygulananDilim: geceDilim } = otelGecelikFiyat(fiyatKaydi)
+    if (!uygulananDilim && geceDilim) uygulananDilim = geceDilim
+
+    odaFiyatiToplam += gecelikFiyat * carpan * odaSay
+  }
 
   const { ucretliYetiskin, ucretliAktivite } = ucretliKisiSayisi(
     yetiskin,
