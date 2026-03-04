@@ -147,6 +147,23 @@
   margin: 0.25rem 0;
 }
 
+.btn-secondary {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--primary);
+  background: #ffffff;
+  color: var(--primary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-secondary:hover {
+  background: #ecfeff;
+}
+
 .step-nav {
   display: flex;
   justify-content: space-between;

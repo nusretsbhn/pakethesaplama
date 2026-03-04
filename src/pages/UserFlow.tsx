@@ -20,7 +20,9 @@ export default function UserFlow() {
   const [sonuc, setSonuc] = useState<HesaplamaSonucu | null>(null)
   const [gorselGoster, setGorselGoster] = useState(false)
 
-  const oteller = store.oteller.getAll()
+  const oteller = store.oteller.getAll().filter((o) =>
+    store.otelFiyatlari.getByOtelId(o.id).length > 0
+  )
   const otel = oteller.find((o) => o.id === otelId)
   const aktiviteler = store.aktiviteler.getAll()
   const yanHizmetler = store.yanHizmetler.getAll()
