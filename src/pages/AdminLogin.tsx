@@ -4,18 +4,20 @@ import { useAuth } from '../context/AuthContext'
 import './Admin.css'
 
 export default function AdminLogin() {
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [hata, setHata] = useState('')
   const { login } = useAuth()
   const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setHata('')
-    if (login(password)) {
+    const ok = await login(username, password)
+    if (ok) {
       navigate('/admin', { replace: true })
     } else {
-      setHata('Geçersiz şifre. Demo: admin')
+      setHata('Geçersiz kullanıcı adı veya şifre.')
     }
   }
 
@@ -24,16 +26,22 @@ export default function AdminLogin() {
       <h1>Admin Girişi</h1>
       <form onSubmit={handleSubmit}>
         <input
+          type="text"
+          placeholder="Kullanıcı adı"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          autoFocus
+        />
+        <input
           type="password"
           placeholder="Şifre"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          autoFocus
         />
         <button type="submit">Giriş</button>
         {hata && <p className="hata">{hata}</p>}
       </form>
-      <p className="demo">Demo şifre: admin</p>
+      <p className="demo">Varsayılan admin: admin / admin</p>
     </div>
   )
 }

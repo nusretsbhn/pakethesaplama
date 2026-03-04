@@ -55,6 +55,13 @@ db.exec(`
     aciklama TEXT
   );
 
+  CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('admin', 'bayi'))
+  );
+
   CREATE TABLE IF NOT EXISTS ayarlar (
     id INTEGER PRIMARY KEY CHECK (id = 1),
     firmaLogosu TEXT,
@@ -64,6 +71,10 @@ db.exec(`
   );
 
   INSERT OR IGNORE INTO ayarlar (id, webAdresi, telefonNo) VALUES (1, '', '');
+
+  -- Varsayılan admin kullanıcısı
+  INSERT OR IGNORE INTO users (id, username, password, role)
+  VALUES ('admin', 'admin', 'admin', 'admin');
 `)
 
 module.exports = db

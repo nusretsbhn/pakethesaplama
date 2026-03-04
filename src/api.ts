@@ -32,6 +32,15 @@ async function del(path: string): Promise<void> {
 }
 
 export const api = {
+  auth: {
+    login: (body: Record<string, unknown>) => post('/login', body),
+  },
+  users: {
+    getAll: () => get('/users'),
+    add: (body: Record<string, unknown>) => post('/users', body),
+    update: (id: string, body: Record<string, unknown>) => patch(`/users/${id}`, body),
+    delete: (id: string) => del(`/users/${id}`),
+  },
   oteller: {
     getAll: () => get('/oteller'),
     add: (body: Record<string, unknown>) => post('/oteller', body),

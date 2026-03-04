@@ -58,6 +58,14 @@ export interface YanHizmet {
   aciklama?: string
 }
 
+export type UserRole = 'admin' | 'bayi'
+
+export interface User {
+  id: string
+  username: string
+  role: UserRole
+}
+
 export interface Ayarlar {
   firmaLogosu?: string // base64 veya url
   tursabLogosu?: string

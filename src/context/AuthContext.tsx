@@ -8,41 +8,62 @@ import {
 
 const AUTH_KEY = 'tur_admin_token'
 
+type UserRole = 'admin' | 'bayi'
+
+type AuthUser = {
+  id: string
+  username: string
+  role: UserRole
+}
+
 type AuthContextType = {
   isAuthenticated: boolean
-  login: (password: string) => boolean
+  user: AuthUser | null
+  login: (username: string, password: string) => Promise<boolean>
   logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
-// Basit demo: şifre "admin" (gerçek uygulamada backend ile doğrulanır)
-const DEMO_PASSWORD = 'admin'
-
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<AuthUser | null>(null)
 
   useEffect(() => {
-    const token = localStorage.getItem(AUTH_KEY)
-    setIsAuthenticated(!!token)
+    const raw = localStorage.getItem(AUTH_KEY)
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as AuthUser
+        setUser(parsed)
+      } catch {
+        localStorage.removeItem(AUTH_KEY)
+      }
+    }
   }, [])
 
-  const login = (password: string): boolean => {
-    if (password === DEMO_PASSWORD) {
-      localStorage.setItem(AUTH_KEY, '1')
-      setIsAuthenticated(true)
+  const login = async (username: string, password: string): Promise<boolean> => {
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      })
+      if (!res.ok) return false
+      const data = (await res.json()) as AuthUser
+      localStorage.setItem(AUTH_KEY, JSON.stringify(data))
+      setUser(data)
       return true
+    } catch {
+      return false
     }
-    return false
   }
 
   const logout = () => {
     localStorage.removeItem(AUTH_KEY)
-    setIsAuthenticated(false)
+    setUser(null)
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated: !!user, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

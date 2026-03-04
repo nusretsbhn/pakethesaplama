@@ -11,6 +11,77 @@ app.use(express.json({ limit: '10mb' }))
 const PORT = process.env.PORT || 3001
 const isProduction = process.env.NODE_ENV === 'production'
 
+// --- Kullanıcılar / Login ---
+app.get('/api/users', (req, res) => {
+  const rows = db.prepare('SELECT id, username, role FROM users ORDER BY username').all()
+  res.json(rows)
+})
+
+app.post('/api/users', (req, res) => {
+  const id = req.body.id || require('crypto').randomUUID()
+  const { username, password, role } = req.body
+  if (!username || !password || !role) {
+    return res.status(400).json({ error: 'username, password ve role zorunludur' })
+  }
+  try {
+    db.prepare('INSERT INTO users (id, username, password, role) VALUES (?, ?, ?, ?)').run(
+      id,
+      username,
+      password,
+      role
+    )
+    const row = db.prepare('SELECT id, username, role FROM users WHERE id = ?').get(id)
+    res.status(201).json(row)
+  } catch (e) {
+    if (String(e.message || '').includes('UNIQUE')) {
+      return res.status(409).json({ error: 'Bu kullanıcı adı zaten kayıtlı' })
+    }
+    console.error(e)
+    res.status(500).json({ error: 'Kullanıcı oluşturulamadı' })
+  }
+})
+
+app.patch('/api/users/:id', (req, res) => {
+  const id = req.params.id
+  const row = db.prepare('SELECT * FROM users WHERE id = ?').get(id)
+  if (!row) return res.status(404).json({ error: 'Bulunamadı' })
+  const username = req.body.username ?? row.username
+  const password = req.body.password ?? row.password
+  const role = req.body.role ?? row.role
+  try {
+    db.prepare('UPDATE users SET username=?, password=?, role=? WHERE id=?').run(
+      username,
+      password,
+      role,
+      id
+    )
+    const r = db.prepare('SELECT id, username, role FROM users WHERE id = ?').get(id)
+    res.json(r)
+  } catch (e) {
+    if (String(e.message || '').includes('UNIQUE')) {
+      return res.status(409).json({ error: 'Bu kullanıcı adı zaten kayıtlı' })
+    }
+    console.error(e)
+    res.status(500).json({ error: 'Güncellenemedi' })
+  }
+})
+
+app.delete('/api/users/:id', (req, res) => {
+  db.prepare('DELETE FROM users WHERE id = ?').run(req.params.id)
+  res.status(204).end()
+})
+
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body
+  if (!username || !password) return res.status(400).json({ error: 'username ve password zorunludur' })
+  const row = db.prepare('SELECT id, username, role FROM users WHERE username = ? AND password = ?').get(
+    username,
+    password
+  )
+  if (!row) return res.status(401).json({ error: 'Geçersiz kullanıcı adı veya şifre' })
+  res.json(row)
+})
+
 // --- Oteller ---
 app.get('/api/oteller', (req, res) => {
   const rows = db.prepare('SELECT * FROM oteller').all()

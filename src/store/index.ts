@@ -5,6 +5,7 @@ import type {
   AktiviteFiyat,
   YanHizmet,
   Ayarlar,
+  User,
 } from '../types'
 import { api } from '../api'
 
@@ -21,17 +22,19 @@ const cache = {
   aktiviteFiyatlari: [] as AktiviteFiyatRow[],
   yanHizmetler: [] as YanHizmetRow[],
   ayarlar: { webAdresi: '', telefonNo: '' } as Ayarlar,
+  users: [] as User[],
   loaded: false,
 }
 
 export async function loadFromApi(): Promise<void> {
-  const [oteller, aktiviteler, otelFiyatlari, aktiviteFiyatlari, yanHizmetler, ayarlar] = await Promise.all([
+  const [oteller, aktiviteler, otelFiyatlari, aktiviteFiyatlari, yanHizmetler, ayarlar, users] = await Promise.all([
     api.oteller.getAll(),
     api.aktiviteler.getAll(),
     api.otelFiyatlari.getAll(),
     api.aktiviteFiyatlari.getAll(),
     api.yanHizmetler.getAll(),
     api.ayarlar.get(),
+    api.users.getAll(),
   ])
   cache.oteller = Array.isArray(oteller) ? oteller : []
   cache.aktiviteler = Array.isArray(aktiviteler) ? aktiviteler : []
@@ -41,6 +44,7 @@ export async function loadFromApi(): Promise<void> {
   cache.ayarlar = (ayarlar && typeof ayarlar === 'object' && 'webAdresi' in ayarlar
     ? ayarlar
     : { webAdresi: '', telefonNo: '' }) as Ayarlar
+  cache.users = Array.isArray(users) ? users : []
   cache.loaded = true
 }
 
@@ -173,6 +177,26 @@ export const store = {
     async set(a: Ayarlar): Promise<void> {
       await api.ayarlar.set(a as unknown as Record<string, unknown>)
       cache.ayarlar = a
+    },
+  },
+
+  users: {
+    getAll(): User[] {
+      return cache.users
+    },
+    async add(u: { username: string; password: string; role: User['role'] }): Promise<User> {
+      const created = (await api.users.add(u)) as User
+      cache.users.push(created)
+      return created
+    },
+    async update(id: string, u: { username?: string; password?: string; role?: User['role'] }): Promise<void> {
+      const updated = (await api.users.update(id, u)) as User
+      const i = cache.users.findIndex((x) => x.id === id)
+      if (i !== -1) cache.users[i] = updated
+    },
+    async delete(id: string): Promise<void> {
+      await api.users.delete(id)
+      cache.users = cache.users.filter((x) => x.id !== id)
     },
   },
 }

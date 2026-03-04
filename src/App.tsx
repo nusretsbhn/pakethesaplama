@@ -4,6 +4,8 @@ import { DataProvider, useDataStatus } from './context/DataProvider'
 import UserFlow from './pages/UserFlow'
 import AdminLogin from './pages/AdminLogin'
 import AdminLayout from './pages/AdminLayout'
+import KullaniciGiris from './pages/admin/KullaniciGiris'
+import BayiPaket from './pages/admin/BayiPaket'
 import OtelGiris from './pages/admin/OtelGiris'
 import AktiviteGiris from './pages/admin/AktiviteGiris'
 import OtelFiyatGiris from './pages/admin/OtelFiyatGiris'
@@ -44,6 +46,8 @@ function AdminGate() {
         <Route path="otel-fiyat" element={<OtelFiyatGiris />} />
         <Route path="aktivite-fiyat" element={<AktiviteFiyatGiris />} />
         <Route path="yan-hizmet" element={<YanHizmetGiris />} />
+        <Route path="kullanicilar" element={<KullaniciGiris />} />
+        <Route path="bayi-paket" element={<BayiPaket />} />
         <Route path="ayarlar" element={<Ayarlar />} />
       </Route>
     </Routes>
