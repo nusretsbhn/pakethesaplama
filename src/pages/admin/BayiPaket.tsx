@@ -237,14 +237,34 @@ export default function BayiPaket() {
         {step === 8 && (
           <section className="step-card">
             <h2>8. Hesapla</h2>
-            <p>Sabit bayi kar marjı: {BAYI_KAR_MARJI.toLocaleString('tr-TR')} TL eklenecektir.</p>
             <button type="button" className="btn-primary btn-large" onClick={handleHesapla}>
               Hesapla
             </button>
             {sonuc && (
-              <div className="sonuc-ozet" style={{ marginTop: '1rem' }}>
-                <p><strong>Kişi başı paket tutarı:</strong> {sonuc.kisiBasiUcret.toLocaleString('tr-TR')} TL</p>
-                <p><strong>Toplam:</strong> {sonuc.toplamUcret.toLocaleString('tr-TR')} TL · {sonuc.geceSayisi} gece</p>
+              <div className="sonuc-ozet" style={{ marginTop: '1rem', textAlign: 'left' }}>
+                <p><strong>{sonuc.geceSayisi} Gece {sonuc.geceSayisi + 1} Gün Konaklama</strong></p>
+                {konaklamaTipi && <p><strong>{konaklamaTipi}</strong></p>}
+                <p style={{ marginTop: '0.75rem' }}><strong>AKTİVİTELER</strong></p>
+                <p>
+                  {aktiviteIds.length === 0
+                    ? 'Seçilmedi'
+                    : aktiviteIds
+                        .map((id) => store.aktiviteler.getById(id)?.ad)
+                        .filter(Boolean)
+                        .join(' · ')}
+                </p>
+                <p style={{ marginTop: '0.75rem' }}><strong>YAN HAKLAR</strong></p>
+                <p>
+                  {yanHizmetIds.length === 0
+                    ? 'Seçilmedi'
+                    : yanHizmetIds
+                        .map((id) => store.yanHizmetler.getAll().find((y) => y.id === id)?.ad)
+                        .filter(Boolean)
+                        .join(' · ')}
+                </p>
+                <p style={{ marginTop: '1rem', fontSize: '1.1rem' }}>
+                  <strong>Kişi Başı:</strong> {sonuc.kisiBasiUcret.toLocaleString('tr-TR')} TL
+                </p>
               </div>
             )}
           </section>
