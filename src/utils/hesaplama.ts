@@ -162,7 +162,7 @@ export function hesapla(girdi: HesaplamaGirdisi): HesaplamaSonucu | null {
       (f) =>
         f.aktiviteId === aid &&
         girisTarihi >= f.baslangicTarihi &&
-        cikisTarihi <= f.bitisTarihi
+        girisTarihi <= f.bitisTarihi
     )
     if (af) aktiviteToplam += af.fiyat * ucretliAktivite
   }

@@ -29,8 +29,11 @@ export default function UserFlow() {
     if (!girisTarihi || !cikisTarihi) return aktiviteler
     return aktiviteler.filter((a) => {
       const fiyatlar = store.aktiviteFiyatlari.getByAktiviteId(a.id)
+      // Aktivite fiyatını otel GİRİŞ tarihindeki kayda göre göster
       return fiyatlar.some(
-        (f) => girisTarihi >= f.baslangicTarihi && cikisTarihi <= f.bitisTarihi
+        (f) =>
+          girisTarihi >= f.baslangicTarihi &&
+          girisTarihi <= f.bitisTarihi
       )
     })
   }, [aktiviteler, girisTarihi, cikisTarihi])
