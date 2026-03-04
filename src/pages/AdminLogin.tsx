@@ -45,7 +45,6 @@ export default function AdminLogin() {
         <button type="submit">Giriş</button>
         {hata && <p className="hata">{hata}</p>}
       </form>
-      <p className="demo">Varsayılan admin: admin / admin</p>
     </div>
   )
 }
