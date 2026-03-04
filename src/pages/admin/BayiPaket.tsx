@@ -95,7 +95,6 @@ export default function BayiPaket() {
     <div className="user-flow">
       <header className="user-header">
         <h1>Bayi Paket Hesaplama</h1>
-        <p className="meta">Kar marjı sabit: {BAYI_KAR_MARJI.toLocaleString('tr-TR')} TL</p>
       </header>
 
       <div className="user-steps">

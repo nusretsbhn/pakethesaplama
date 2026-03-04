@@ -19,7 +19,7 @@ type AuthUser = {
 type AuthContextType = {
   isAuthenticated: boolean
   user: AuthUser | null
-  login: (username: string, password: string) => Promise<boolean>
+  login: (username: string, password: string) => Promise<AuthUser | null>
   logout: () => void
 }
 
@@ -40,20 +40,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (username: string, password: string): Promise<AuthUser | null> => {
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       })
-      if (!res.ok) return false
+      if (!res.ok) return null
       const data = (await res.json()) as AuthUser
       localStorage.setItem(AUTH_KEY, JSON.stringify(data))
       setUser(data)
-      return true
+      return data
     } catch {
-      return false
+      return null
     }
   }
 

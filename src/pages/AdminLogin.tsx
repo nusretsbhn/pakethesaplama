@@ -13,9 +13,13 @@ export default function AdminLogin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setHata('')
-    const ok = await login(username, password)
-    if (ok) {
-      navigate('/admin', { replace: true })
+    const authUser = await login(username, password)
+    if (authUser) {
+      if (authUser.role === 'bayi') {
+        navigate('/admin/bayi-paket', { replace: true })
+      } else {
+        navigate('/admin', { replace: true })
+      }
     } else {
       setHata('Geçersiz kullanıcı adı veya şifre.')
     }
