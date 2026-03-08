@@ -47,8 +47,9 @@ export default function Rezervasyonlar() {
     })
   }, [aktiviteler, girisTarihi])
 
-  const toplamPaketTutari = useMemo(() => {
-    if (!otelId || !konaklamaTipi || !odaTipi || !girisTarihi || !cikisTarihi) return 0
+  // Paket hazırlama ile aynı kriterler: kişi başı (500 TL yuvarlamalı) × kişi sayısı = toplam
+  const { kisiBasiUcret, toplamPaketTutari } = useMemo(() => {
+    if (!otelId || !konaklamaTipi || !odaTipi || !girisTarihi || !cikisTarihi) return { kisiBasiUcret: 0, toplamPaketTutari: 0 }
     try {
       const sonuc = hesapla({
         otelId,
@@ -63,9 +64,12 @@ export default function Rezervasyonlar() {
         yanHizmetIds: [],
         karMarji: BAYI_KAR_MARJI,
       })
-      return sonuc?.toplamUcret ?? 0
+      if (!sonuc) return { kisiBasiUcret: 0, toplamPaketTutari: 0 }
+      const kisiSayisi = yetiskin + cocuk + bebek
+      const toplam = kisiSayisi > 0 ? sonuc.kisiBasiUcret * kisiSayisi : 0
+      return { kisiBasiUcret: sonuc.kisiBasiUcret, toplamPaketTutari: toplam }
     } catch {
-      return 0
+      return { kisiBasiUcret: 0, toplamPaketTutari: 0 }
     }
   }, [otelId, konaklamaTipi, odaTipi, girisTarihi, cikisTarihi, yetiskin, cocuk, bebek, aktiviteIds])
 
@@ -290,7 +294,11 @@ export default function Rezervasyonlar() {
               </div>
             </div>
             <div className="form-group">
-              <label>Toplam Paket Tutarı (otomatik)</label>
+              <label>Kişi Başı Paket Fiyatı (otomatik, paket hazırlama ile aynı yuvarlama)</label>
+              <input type="text" readOnly value={kisiBasiUcret > 0 ? `${kisiBasiUcret.toLocaleString('tr-TR')} TL` : '—'} style={{ background: '#f1f5f9', cursor: 'default' }} />
+            </div>
+            <div className="form-group">
+              <label>Toplam Paket Tutarı (kişi başı × kişi sayısı)</label>
               <input type="text" readOnly value={toplamPaketTutari > 0 ? `${toplamPaketTutari.toLocaleString('tr-TR')} TL` : '—'} style={{ background: '#f1f5f9', cursor: 'default' }} />
             </div>
             <div className="form-group">
