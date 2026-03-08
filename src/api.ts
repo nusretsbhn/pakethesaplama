@@ -84,10 +84,13 @@ export const api = {
       }),
   },
   rezervasyonlar: {
-    getAll: (params?: { durum?: string; olusturan?: string }) => {
+    getAll: (params?: { durum?: string; olusturan?: string; musteriAdSoyad?: string; telefon?: string; girisTarihi?: string }) => {
       const q = new URLSearchParams()
       if (params?.durum) q.set('durum', params.durum)
       if (params?.olusturan) q.set('olusturan', params.olusturan)
+      if (params?.musteriAdSoyad?.trim()) q.set('musteriAdSoyad', params.musteriAdSoyad.trim())
+      if (params?.telefon?.trim()) q.set('telefon', params.telefon.trim())
+      if (params?.girisTarihi?.trim()) q.set('girisTarihi', params.girisTarihi.trim())
       const query = q.toString()
       return get<unknown[]>(`/rezervasyonlar${query ? `?${query}` : ''}`)
     },

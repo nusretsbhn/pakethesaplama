@@ -202,7 +202,7 @@ export const store = {
   },
 
   rezervasyonlar: {
-    async getAll(params?: { durum?: string; olusturan?: string }): Promise<Rezervasyon[]> {
+    async getAll(params?: { durum?: string; olusturan?: string; musteriAdSoyad?: string; telefon?: string; girisTarihi?: string }): Promise<Rezervasyon[]> {
       const list = await api.rezervasyonlar.getAll(params)
       return (Array.isArray(list) ? list : []) as Rezervasyon[]
     },

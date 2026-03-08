@@ -13,6 +13,9 @@ export default function Rezervasyonlar() {
   const [list, setList] = useState<Rezervasyon[]>([])
   const [filterDurum, setFilterDurum] = useState<string>('')
   const [filterOlusturan, setFilterOlusturan] = useState<string>('')
+  const [filterMusteri, setFilterMusteri] = useState<string>('')
+  const [filterTelefon, setFilterTelefon] = useState<string>('')
+  const [filterTarih, setFilterTarih] = useState<string>('')
   const [formVisible, setFormVisible] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
 
@@ -74,17 +77,20 @@ export default function Rezervasyonlar() {
   }, [otelId, konaklamaTipi, odaTipi, girisTarihi, cikisTarihi, yetiskin, cocuk, bebek, aktiviteIds])
 
   const loadList = async () => {
-    const params: { durum?: string; olusturan?: string } = {}
+    const params: { durum?: string; olusturan?: string; musteriAdSoyad?: string; telefon?: string; girisTarihi?: string } = {}
     if (filterDurum) params.durum = filterDurum
     if (filterOlusturan) params.olusturan = filterOlusturan
     else if (user?.role === 'bayi' && user?.username) params.olusturan = user.username
+    if (filterMusteri.trim()) params.musteriAdSoyad = filterMusteri.trim()
+    if (filterTelefon.trim()) params.telefon = filterTelefon.trim()
+    if (filterTarih) params.girisTarihi = filterTarih
     const data = await store.rezervasyonlar.getAll(params)
     setList(data)
   }
 
   useEffect(() => {
     loadList()
-  }, [filterDurum, filterOlusturan, user?.role, user?.username])
+  }, [filterDurum, filterOlusturan, filterMusteri, filterTelefon, filterTarih, user?.role, user?.username])
 
   const resetForm = () => {
     setEditId(null)
@@ -213,6 +219,35 @@ export default function Rezervasyonlar() {
             />
           </label>
         )}
+        <label>
+          Müşteri adı
+          <input
+            type="text"
+            placeholder="Ad veya soyad"
+            value={filterMusteri}
+            onChange={(e) => setFilterMusteri(e.target.value)}
+            style={{ width: '140px' }}
+          />
+        </label>
+        <label>
+          Telefon
+          <input
+            type="text"
+            placeholder="Telefon"
+            value={filterTelefon}
+            onChange={(e) => setFilterTelefon(e.target.value)}
+            style={{ width: '120px' }}
+          />
+        </label>
+        <label>
+          Giriş tarihi
+          <input
+            type="date"
+            value={filterTarih}
+            onChange={(e) => setFilterTarih(e.target.value)}
+            style={{ width: '140px' }}
+          />
+        </label>
         <button type="button" className="btn-primary" onClick={openNew}>
           Yeni Rezervasyon
         </button>

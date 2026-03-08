@@ -306,11 +306,23 @@ function mapRezervasyon(row) {
 }
 
 app.get('/api/rezervasyonlar', (req, res) => {
-  const { durum, olusturan } = req.query
+  const { durum, olusturan, musteriAdSoyad, telefon, girisTarihi } = req.query
   let sql = 'SELECT * FROM rezervasyonlar WHERE 1=1'
   const params = []
   if (durum) { sql += ' AND durum = ?'; params.push(durum) }
   if (olusturan) { sql += ' AND olusturan = ?'; params.push(olusturan) }
+  if (musteriAdSoyad && String(musteriAdSoyad).trim()) {
+    sql += ' AND musteriAdSoyad LIKE ?'
+    params.push('%' + String(musteriAdSoyad).trim() + '%')
+  }
+  if (telefon && String(telefon).trim()) {
+    sql += ' AND telefon LIKE ?'
+    params.push('%' + String(telefon).trim() + '%')
+  }
+  if (girisTarihi && String(girisTarihi).trim()) {
+    sql += ' AND girisTarihi = ?'
+    params.push(String(girisTarihi).trim())
+  }
   sql += ' ORDER BY olusturmaTarihi DESC'
   const rows = db.prepare(sql).all(...params)
   res.json(rows.map(mapRezervasyon))
