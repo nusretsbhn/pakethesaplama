@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const path = require('path')
 const fs = require('fs')
-const db = require('./db')
+const db = require('./db.cjs')
 
 const app = express()
 app.use(cors())
@@ -321,7 +321,7 @@ app.post('/api/rezervasyonlar', (req, res) => {
   const b = req.body
   const olusturmaTarihi = new Date().toISOString()
   db.prepare(`
-    INSERT INTO rezervasyonlar (id, musteriAdSoyad, telefon, mail, tcKimlikNo, otelId, konaklamaTipi, odaTipi, girisTarihi, cikisTarihi, yetiskin, cocuk, bebek, aktiviteIds, toplamPaketTutari, alinanOnOdeme, not, durum, olusturmaTarihi, olusturan)
+    INSERT INTO rezervasyonlar (id, musteriAdSoyad, telefon, mail, tcKimlikNo, otelId, konaklamaTipi, odaTipi, girisTarihi, cikisTarihi, yetiskin, cocuk, bebek, aktiviteIds, toplamPaketTutari, alinanOnOdeme, "not", durum, olusturmaTarihi, olusturan)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     id, b.musteriAdSoyad, b.telefon, b.mail, b.tcKimlikNo || '', b.otelId, b.konaklamaTipi, b.odaTipi,
@@ -340,7 +340,7 @@ app.patch('/api/rezervasyonlar/:id', (req, res) => {
   const u = { ...row, ...req.body }
   if (req.body.aktiviteIds !== undefined) u.aktiviteIds = JSON.stringify(req.body.aktiviteIds)
   db.prepare(`
-    UPDATE rezervasyonlar SET musteriAdSoyad=?, telefon=?, mail=?, tcKimlikNo=?, otelId=?, konaklamaTipi=?, odaTipi=?, girisTarihi=?, cikisTarihi=?, yetiskin=?, cocuk=?, bebek=?, aktiviteIds=?, toplamPaketTutari=?, alinanOnOdeme=?, not=?, durum=?
+    UPDATE rezervasyonlar SET musteriAdSoyad=?, telefon=?, mail=?, tcKimlikNo=?, otelId=?, konaklamaTipi=?, odaTipi=?, girisTarihi=?, cikisTarihi=?, yetiskin=?, cocuk=?, bebek=?, aktiviteIds=?, toplamPaketTutari=?, alinanOnOdeme=?, "not"=?, durum=?
     WHERE id=?
   `).run(
     u.musteriAdSoyad, u.telefon, u.mail, u.tcKimlikNo, u.otelId, u.konaklamaTipi, u.odaTipi,

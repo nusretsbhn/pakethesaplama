@@ -13,4 +13,4 @@ ENV NODE_ENV=production
 EXPOSE 3001
 
 # Veritabanı data/ klasöründe; volume ile kalıcı yapılacak
-CMD ["node", "server/index.js"]
+CMD ["node", "server/index.cjs"]

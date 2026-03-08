@@ -79,7 +79,7 @@ db.exec(`
     aktiviteIds TEXT NOT NULL DEFAULT '[]',
     toplamPaketTutari REAL NOT NULL,
     alinanOnOdeme REAL NOT NULL DEFAULT 0,
-    not TEXT,
+    "not" TEXT,
     durum TEXT NOT NULL DEFAULT 'Aktif' CHECK (durum IN ('Aktif', 'Iptal', 'Tamamlandi')),
     olusturmaTarihi TEXT NOT NULL,
     olusturan TEXT NOT NULL,
