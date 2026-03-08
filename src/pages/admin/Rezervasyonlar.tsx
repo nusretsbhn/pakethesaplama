@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext'
 import { hesapla } from '../../utils/hesaplama'
 import type { Rezervasyon, RezervasyonDurum } from '../../types'
 import '../UserFlow.css'
-import './Admin.css'
+import '../Admin.css'
 
 const BAYI_KAR_MARJI = 8000
 
