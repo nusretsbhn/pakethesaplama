@@ -83,4 +83,16 @@ export const api = {
         return r.json()
       }),
   },
+  rezervasyonlar: {
+    getAll: (params?: { durum?: string; olusturan?: string }) => {
+      const q = new URLSearchParams()
+      if (params?.durum) q.set('durum', params.durum)
+      if (params?.olusturan) q.set('olusturan', params.olusturan)
+      const query = q.toString()
+      return get<unknown[]>(`/rezervasyonlar${query ? `?${query}` : ''}`)
+    },
+    add: (body: Record<string, unknown>) => post('/rezervasyonlar', body),
+    update: (id: string, body: Record<string, unknown>) => patch(`/rezervasyonlar/${id}`, body),
+    delete: (id: string) => del(`/rezervasyonlar/${id}`),
+  },
 }

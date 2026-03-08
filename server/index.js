@@ -279,6 +279,82 @@ app.delete('/api/yan-hizmetler/:id', (req, res) => {
   res.status(204).end()
 })
 
+// --- Rezervasyonlar ---
+function mapRezervasyon(row) {
+  return {
+    id: row.id,
+    musteriAdSoyad: row.musteriAdSoyad,
+    telefon: row.telefon,
+    mail: row.mail,
+    tcKimlikNo: row.tcKimlikNo,
+    otelId: row.otelId,
+    konaklamaTipi: row.konaklamaTipi,
+    odaTipi: row.odaTipi,
+    girisTarihi: row.girisTarihi,
+    cikisTarihi: row.cikisTarihi,
+    yetiskin: row.yetiskin,
+    cocuk: row.cocuk,
+    bebek: row.bebek,
+    aktiviteIds: JSON.parse(row.aktiviteIds || '[]'),
+    toplamPaketTutari: row.toplamPaketTutari,
+    alinanOnOdeme: row.alinanOnOdeme,
+    not: row.not || undefined,
+    durum: row.durum,
+    olusturmaTarihi: row.olusturmaTarihi,
+    olusturan: row.olusturan,
+  }
+}
+
+app.get('/api/rezervasyonlar', (req, res) => {
+  const { durum, olusturan } = req.query
+  let sql = 'SELECT * FROM rezervasyonlar WHERE 1=1'
+  const params = []
+  if (durum) { sql += ' AND durum = ?'; params.push(durum) }
+  if (olusturan) { sql += ' AND olusturan = ?'; params.push(olusturan) }
+  sql += ' ORDER BY olusturmaTarihi DESC'
+  const rows = db.prepare(sql).all(...params)
+  res.json(rows.map(mapRezervasyon))
+})
+
+app.post('/api/rezervasyonlar', (req, res) => {
+  const id = req.body.id || require('crypto').randomUUID()
+  const b = req.body
+  const olusturmaTarihi = new Date().toISOString()
+  db.prepare(`
+    INSERT INTO rezervasyonlar (id, musteriAdSoyad, telefon, mail, tcKimlikNo, otelId, konaklamaTipi, odaTipi, girisTarihi, cikisTarihi, yetiskin, cocuk, bebek, aktiviteIds, toplamPaketTutari, alinanOnOdeme, not, durum, olusturmaTarihi, olusturan)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    id, b.musteriAdSoyad, b.telefon, b.mail, b.tcKimlikNo || '', b.otelId, b.konaklamaTipi, b.odaTipi,
+    b.girisTarihi, b.cikisTarihi, b.yetiskin ?? 0, b.cocuk ?? 0, b.bebek ?? 0,
+    JSON.stringify(b.aktiviteIds || []), b.toplamPaketTutari, b.alinanOnOdeme ?? 0, b.not || null,
+    b.durum || 'Aktif', olusturmaTarihi, b.olusturan || ''
+  )
+  const row = db.prepare('SELECT * FROM rezervasyonlar WHERE id = ?').get(id)
+  res.status(201).json(mapRezervasyon(row))
+})
+
+app.patch('/api/rezervasyonlar/:id', (req, res) => {
+  const id = req.params.id
+  const row = db.prepare('SELECT * FROM rezervasyonlar WHERE id = ?').get(id)
+  if (!row) return res.status(404).json({ error: 'Bulunamadı' })
+  const u = { ...row, ...req.body }
+  if (req.body.aktiviteIds !== undefined) u.aktiviteIds = JSON.stringify(req.body.aktiviteIds)
+  db.prepare(`
+    UPDATE rezervasyonlar SET musteriAdSoyad=?, telefon=?, mail=?, tcKimlikNo=?, otelId=?, konaklamaTipi=?, odaTipi=?, girisTarihi=?, cikisTarihi=?, yetiskin=?, cocuk=?, bebek=?, aktiviteIds=?, toplamPaketTutari=?, alinanOnOdeme=?, not=?, durum=?
+    WHERE id=?
+  `).run(
+    u.musteriAdSoyad, u.telefon, u.mail, u.tcKimlikNo, u.otelId, u.konaklamaTipi, u.odaTipi,
+    u.girisTarihi, u.cikisTarihi, u.yetiskin, u.cocuk, u.bebek, u.aktiviteIds, u.toplamPaketTutari, u.alinanOnOdeme, u.not ?? null, u.durum, id
+  )
+  const r = db.prepare('SELECT * FROM rezervasyonlar WHERE id = ?').get(id)
+  res.json(mapRezervasyon(r))
+})
+
+app.delete('/api/rezervasyonlar/:id', (req, res) => {
+  db.prepare('DELETE FROM rezervasyonlar WHERE id = ?').run(req.params.id)
+  res.status(204).end()
+})
+
 // --- Ayarlar ---
 app.get('/api/ayarlar', (req, res) => {
   const row = db.prepare('SELECT * FROM ayarlar WHERE id = 1').get()

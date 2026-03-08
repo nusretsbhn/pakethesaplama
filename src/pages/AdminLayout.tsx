@@ -14,7 +14,8 @@ const adminTabs = [
 ]
 
 const bayiTabs = [
-  { to: '/admin/bayi-paket', end: true, label: 'Bayi Paket Hesaplama' },
+  { to: '/admin/bayi-paket', end: true, label: 'Paket Hesaplama' },
+  { to: '/admin/rezervasyonlar', label: 'Rezervasyonlar' },
 ]
 
 export default function AdminLayout() {

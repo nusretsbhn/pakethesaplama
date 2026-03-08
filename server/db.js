@@ -62,6 +62,30 @@ db.exec(`
     role TEXT NOT NULL CHECK (role IN ('admin', 'bayi'))
   );
 
+  CREATE TABLE IF NOT EXISTS rezervasyonlar (
+    id TEXT PRIMARY KEY,
+    musteriAdSoyad TEXT NOT NULL,
+    telefon TEXT NOT NULL,
+    mail TEXT NOT NULL,
+    tcKimlikNo TEXT NOT NULL,
+    otelId TEXT NOT NULL,
+    konaklamaTipi TEXT NOT NULL,
+    odaTipi TEXT NOT NULL,
+    girisTarihi TEXT NOT NULL,
+    cikisTarihi TEXT NOT NULL,
+    yetiskin INTEGER NOT NULL DEFAULT 0,
+    cocuk INTEGER NOT NULL DEFAULT 0,
+    bebek INTEGER NOT NULL DEFAULT 0,
+    aktiviteIds TEXT NOT NULL DEFAULT '[]',
+    toplamPaketTutari REAL NOT NULL,
+    alinanOnOdeme REAL NOT NULL DEFAULT 0,
+    not TEXT,
+    durum TEXT NOT NULL DEFAULT 'Aktif' CHECK (durum IN ('Aktif', 'Iptal', 'Tamamlandi')),
+    olusturmaTarihi TEXT NOT NULL,
+    olusturan TEXT NOT NULL,
+    FOREIGN KEY (otelId) REFERENCES oteller(id)
+  );
+
   CREATE TABLE IF NOT EXISTS ayarlar (
     id INTEGER PRIMARY KEY CHECK (id = 1),
     firmaLogosu TEXT,

@@ -6,6 +6,7 @@ import AdminLogin from './pages/AdminLogin'
 import AdminLayout from './pages/AdminLayout'
 import KullaniciGiris from './pages/admin/KullaniciGiris'
 import BayiPaket from './pages/admin/BayiPaket'
+import Rezervasyonlar from './pages/admin/Rezervasyonlar'
 import OtelGiris from './pages/admin/OtelGiris'
 import AktiviteGiris from './pages/admin/AktiviteGiris'
 import OtelFiyatGiris from './pages/admin/OtelFiyatGiris'
@@ -48,6 +49,7 @@ function AdminGate() {
         <Route path="yan-hizmet" element={<YanHizmetGiris />} />
         <Route path="kullanicilar" element={<KullaniciGiris />} />
         <Route path="bayi-paket" element={<BayiPaket />} />
+        <Route path="rezervasyonlar" element={<Rezervasyonlar />} />
         <Route path="ayarlar" element={<Ayarlar />} />
       </Route>
     </Routes>

@@ -6,6 +6,7 @@ import type {
   YanHizmet,
   Ayarlar,
   User,
+  Rezervasyon,
 } from '../types'
 import { api } from '../api'
 
@@ -197,6 +198,22 @@ export const store = {
     async delete(id: string): Promise<void> {
       await api.users.delete(id)
       cache.users = cache.users.filter((x) => x.id !== id)
+    },
+  },
+
+  rezervasyonlar: {
+    async getAll(params?: { durum?: string; olusturan?: string }): Promise<Rezervasyon[]> {
+      const list = await api.rezervasyonlar.getAll(params)
+      return (Array.isArray(list) ? list : []) as Rezervasyon[]
+    },
+    async add(r: Omit<Rezervasyon, 'id' | 'olusturmaTarihi'>): Promise<Rezervasyon> {
+      return (await api.rezervasyonlar.add(r)) as Rezervasyon
+    },
+    async update(id: string, r: Partial<Rezervasyon>): Promise<void> {
+      await api.rezervasyonlar.update(id, r)
+    },
+    async delete(id: string): Promise<void> {
+      await api.rezervasyonlar.delete(id)
     },
   },
 }

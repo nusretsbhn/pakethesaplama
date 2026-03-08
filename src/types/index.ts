@@ -66,6 +66,31 @@ export interface User {
   role: UserRole
 }
 
+export type RezervasyonDurum = 'Aktif' | 'Iptal' | 'Tamamlandi'
+
+export interface Rezervasyon {
+  id: string
+  musteriAdSoyad: string
+  telefon: string
+  mail: string
+  tcKimlikNo: string
+  otelId: string
+  konaklamaTipi: string
+  odaTipi: string
+  girisTarihi: string
+  cikisTarihi: string
+  yetiskin: number
+  cocuk: number
+  bebek: number
+  aktiviteIds: string[]
+  toplamPaketTutari: number
+  alinanOnOdeme: number
+  not?: string
+  durum: RezervasyonDurum
+  olusturmaTarihi: string
+  olusturan: string
+}
+
 export interface Ayarlar {
   firmaLogosu?: string // base64 veya url
   tursabLogosu?: string
